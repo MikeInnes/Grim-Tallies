@@ -30,3 +30,7 @@ It's important to note that this is probably an overestimate of total global cas
 [1] The number of new estimated cases given one new official case is `dS/dx ∝ d/dx(log(x)) = 1/x`. The highest and lowest case rates are 7.2×10<sup>-10</sup> and 0.042, implying that `dS` varies by a factor of 5×10<sup>7</sup> (the model parameters modify `dS` by a factor, but this doesn't change the ratio).
 
 [2] Another oddity is that the original model uses a Gaussian approximation (linear regression) to data that is roughly binomial (binary tests of a small subset of a population), with small `N` and `p`. I don't think this is the cause of my major concerns with the model, but at any rate, I used binomial regression.
+
+UK estimated daily cases:
+
+![uk](uk.png)
