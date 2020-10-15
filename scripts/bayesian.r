@@ -33,9 +33,9 @@ prediction_df$pred_ir <- pred(prediction_df$case_ir, prediction_df$death_r, pred
 prediction_df$pred_ir_low <- qbinom(0.05, 1000, prediction_df$pred_ir)/1000
 prediction_df$pred_ir_high <- qbinom(0.95, 1000, prediction_df$pred_ir)/1000
 
-prediction_df$pred_ir <- ave(prediction_df$pred_ir, prediction_df$iso3c, FUN = function(x) max_run(make_average(x, n = 5)))
-prediction_df$pred_ir_low <- ave(prediction_df$pred_ir_low, prediction_df$iso3c, FUN = function(x) max_run(make_average(x, n = 5)))
-prediction_df$pred_ir_high <- ave(prediction_df$pred_ir_high, prediction_df$iso3c, FUN = function(x) max_run(make_average(x, n = 5)))
+# prediction_df$pred_ir <- ave(prediction_df$pred_ir, prediction_df$iso3c, FUN = function(x) max_run(make_average(x, n = 5)))
+# prediction_df$pred_ir_low <- ave(prediction_df$pred_ir_low, prediction_df$iso3c, FUN = function(x) max_run(make_average(x, n = 5)))
+# prediction_df$pred_ir_high <- ave(prediction_df$pred_ir_high, prediction_df$iso3c, FUN = function(x) max_run(make_average(x, n = 5)))
 
 # From predicted sero-prevalence rates, we extract implied case counts
 prediction_df$pred_cases <- prediction_df$pred_ir*prediction_df$population
@@ -59,9 +59,8 @@ ggplot(prediction_df[!duplicated(prediction_df$date), ],
   theme(legend.title = element_blank(), legend.position = "bottom")+xlab("")+ylab("")
 
 latest <- prediction_df[prediction_df$date == max(prediction_df$date),]
-# latest <- latest[latest$pred_ir > 0.8,]
 
-ggplot(latest, aes(x=country,y=pred_ir)) + geom_bar(stat="identity")
+# ggplot(latest, aes(x=country,y=pred_ir)) + geom_bar(stat="identity")
 
 # To generate the large plot, we first-differences and by continent and a select few large countries:
 
@@ -71,6 +70,11 @@ prediction_df$continents_plus[prediction_df$country == "United States"] <- "Unit
 prediction_df$continents_plus[prediction_df$country == "China"] <- "China"
 prediction_df$continents_plus[prediction_df$country == "India"] <- "India"
 prediction_df$continents_plus[prediction_df$country == "Brazil"] <- "Brazil"
+
+new_cases_fun <- function(x) {
+  x <- x - c(0, x)[1:length(x)]
+  # x <- make_average(x, n = 10)
+  x }
 
 # This function takes first differences by country and sums countries together by day and group: 
 big_chart_data <- function(prediction_df, grouping = "continent_plus"){
@@ -86,14 +90,15 @@ big_chart_data <- function(prediction_df, grouping = "continent_plus"){
   
   new_cases_fun <- function(x) {
     x <- x - c(0, x)[1:length(x)]
-    x <- make_average(x, n = 10)
+    x <- make_average(x, n = 7)
+    x <- make_average(x, n = 7)
     x }
   regions <- regions[!duplicated(paste0(regions$date, "_", regions$region)), ]
   
-  regions$pred_region_cases <- ave(regions$pred_region_cases, regions$region, FUN = function(x) make_average(x, n = 10))
-  regions$pred_region_cases_low <- ave(regions$pred_region_cases_low, regions$region, FUN = function(x) make_average(x, n = 10))
-  regions$pred_region_cases_high <- ave(regions$pred_region_cases_high, regions$region, FUN = function(x) make_average(x, n = 10))
-  
+  # regions$pred_region_cases <- ave(regions$pred_region_cases, regions$region, FUN = function(x) make_average(x, n = 10))
+  # regions$pred_region_cases_low <- ave(regions$pred_region_cases_low, regions$region, FUN = function(x) make_average(x, n = 10))
+  # regions$pred_region_cases_high <- ave(regions$pred_region_cases_high, regions$region, FUN = function(x) make_average(x, n = 10))
+
   regions$new_cases <- ave(regions$region_cases, regions$region, FUN = new_cases_fun)
   regions$new_pred_cases <- ave(regions$pred_region_cases, regions$region, FUN = new_cases_fun)
   regions$new_pred_cases_high <- ave(regions$pred_region_cases_high, regions$region, FUN = new_cases_fun)
@@ -103,10 +108,9 @@ continents_plus <- big_chart_data(prediction_df, grouping = "continents_plus") #
 
 # This reproduces our first large plot:
 ggplot(continents_plus, 
-       aes(x=date, ymin = 0))+geom_area(aes(y=-new_pred_cases, fill = continents_plus), col = "white")+
-  theme_minimal()+geom_ribbon(aes(ymin = 0, ymax = -new_cases, fill = "Reported Cases"))+
+       aes(x=date, ymin = 0))+geom_area(aes(y=new_pred_cases, fill = continents_plus), col = "white")+
+  theme_minimal()+
   #  geom_line(aes(y=new_pred_cases_high), col = "white")+
   # geom_line(aes(y=new_pred_cases_low), col = "black")+
   scale_y_continuous(labels = scales::comma)+ylab("")+
   theme(legend.title = element_blank(), legend.position = "bottom")+xlab("")
-
