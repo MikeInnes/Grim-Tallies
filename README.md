@@ -15,9 +15,9 @@ The Economist's [recent article](https://www.economist.com/briefing/2020/09/26/t
 
 However, this turns out to be an assumption of the model, rather than a conclusion. Seroprevalence is treated as porportional to the log of official counts, which is a very strong assumption in favour of option (3); it implies that new official cases count for 5×10<sup>-7</sup> times less than they did at the start of the pandemic [1]. Recent cases are so heavily discounted that the graph's iceberg-like shape (which admittedly makes for a nice visual metaphor) is guaranteed before we've even seen any data.
 
-This assumption might be very accurate – but it may not be, and it's not clear to how, or if, it was validated. So I wanted to try fitting a model without it [2], and instead figure out what discount was justified by the data. Here are the results:
+This assumption might be very accurate – but it may not be, and it's not clear to how, or if, it was validated. So I wanted to try fitting a model without it [2], and instead figure out what discount was justified by the data. Here are the results (total world cases and daily new cases by region), with the Economist's plots below for comparison:
 
-[image]
+![plot](plot.png)
 
 These seem, to me, more plausible results, which better match the experience of countries like India and Brazil over August. The model still learns to discount more recent cases, just nowhere near as strongly as in the original. One surprise is that, whereas the April peak in global death counts is larger than the August one, the model predicts a much higher peak in August. This seems somewhat plausible, though, given that the countries affected in August may be reporting less accurate death counts; alongside that, treatment has improved and the more vulnerable may have been more affected early on. (Note also that the original model thinks that the new cases had mostly died away by August, which is surely even less likely.)
 
