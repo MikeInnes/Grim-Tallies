@@ -1,7 +1,7 @@
 Grim Tallies
 ============
 
-This is a fork of The Economist's [Grim Tallies](https://github.com/TheEconomist/Grim-Tallies) seroprevalance model. I'm grateful to them for making public their hard-earned data. This started as an attempt to understand their model, became an evaluation, and eventually ended up as a rework.
+This is a fork of The Economist's [Grim Tallies](https://github.com/TheEconomist/Grim-Tallies) seroprevalance model. I'm grateful to them for making public their hard-earned data. This started as an attempt to understand their model, became an evaluation, and ended up as a rework.
 
 The main reason seroprevalence data is interesting (for me, at least) is to understand the kind of relationship that reported case/death statistics have to underlying infection rates. Since not all cases are caught, true infection rates are likely higher than official counts by some multiple `C`, which we'd like to estimate (using seroprevalence as a proxy).
 
